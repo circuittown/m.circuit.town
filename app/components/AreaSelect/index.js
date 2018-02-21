@@ -73,7 +73,7 @@ export default class AreaSelect extends React.Component {
                         this.areaPick();
                     }}
                     title="Go"
-                    color="#841584"
+                    color="#FFFFFF"
                     accessibilityLabel="Pick a climbing area"
                     />
                     </View>

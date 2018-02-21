@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
     AppRegistry,
+    Button,
     Picker,
     ActivityIndicator,
     Text,
@@ -10,8 +11,11 @@ import {
 export default class AreaSelect extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            isLoading: true
+            isLoading: true,
+            dataSource:{},
+            areaId: this.props.areaId
         }
     }
 
@@ -30,6 +34,12 @@ export default class AreaSelect extends React.Component {
            })
     }
 
+    areaPick() {
+        var areaId = this.state.areaId;
+        this.props.navigation.navigate('Area', {areaId:areaId});
+    }
+
+
     render() {
         if (this.state.isLoading) {
             return (
@@ -40,22 +50,39 @@ export default class AreaSelect extends React.Component {
         }
 
         return (
+                    <View>
                     <Picker style={{backgroundColor:'white'}}
                     mode='dropdown'
-                    selectedValue={this.state.area_id}
-                    onValueChange={(itemValue, itemIndex) => this.setState({area_id: itemValue})}>
+                    selectedValue={this.state.areaId}
+                    onValueChange={(itemValue, itemIndex) => {
+                        this.setState(() => {
+                        console.log(itemValue);
+                            return {areaId: itemValue}
+                        });
+
+                    }}
+                        >
                     <Picker.Item label='-select an area-' value='' key='' />
                     { this.state.dataSource.map((item, key)=>(
                                     <Picker.Item label={item.area} value={item.area_id} key={key} />)
                     )}
 
                     </Picker>
+                    <Button
+                    onPress={() => {
+                        this.areaPick();
+                    }}
+                    title="Go"
+                    color="#841584"
+                    accessibilityLabel="Pick a climbing area"
+                    />
+                    </View>
         );
     }
 
     async getAreas() {
         try {
-            let response = await fetch('http://192.168.1.48:8000/api/getAreas');
+            let response = await fetch('http://172.20.10.3:8000/api/getAreas');
             let responseJson = await response.json();
             return responseJson;
         } catch(error) {
